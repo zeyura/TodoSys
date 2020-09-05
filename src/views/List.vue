@@ -14,9 +14,9 @@
                 <label>Status Filter</label>
             </div>
             <div class="input-field col s12 m6 l4">
-                <select class="" v-model="sorter" ref="selectSorter" :onchange="sortChange()">
-                    <option value="time">By Time</option>
-                    <option value="timeAgo">By Time Ago</option>
+                <select class="" v-model="sorter" ref="selectSorter"  @change="sortChange()">
+                    <option value="date" selected>By Date &uparrow;</option>
+                    <option value="dateAgo">By Date &darr;</option>
                     <option value="ask">Ask</option>
                     <option value="desk">Desk</option>
                 </select>
@@ -63,12 +63,17 @@
     export default {
         name: "list",
         data: () => ({
+           tasksArr: [],
            filter: 'all',
-           sorter: 'time'
+           sorter: localStorage.getItem('tasksSort'),
         }),
         computed: {
             tasks() {
-                return this.$store.getters.tasks;
+                if( this.sorter === 'date' ) return this.tasksArr.sort((a,b) => new Date(a.date) > new Date(b.date) ? 1 : -1 );
+                else if( this.sorter === 'dateAgo' ) return this.tasksArr.sort((a,b) => new Date(a.date) < new Date(b.date) ? 1 : -1 );
+                else if( this.sorter === 'ask' ) return this.tasksArr.sort((a,b) => a.title > b.title ? 1 : -1 );
+                else if( this.sorter === 'desk') return this.tasksArr.sort((a,b) => a.title < b.title ? 1 : -1 );
+                else return this.tasksArr;
             },
             filteredTasks() {
                 return this.tasks.filter( t => {
@@ -87,6 +92,14 @@
         methods: {
             sortChange() {
                 localStorage.setItem('tasksSort', this.sorter);
+            }
+        },
+        created() {
+            this.tasksArr   = this.$store.getters.tasks;
+
+            if(!localStorage.getItem('tasksSort')) {
+                localStorage.setItem('tasksSort', 'date');
+                this.sorter = localStorage.getItem('tasksSort');
             }
         }
     }
