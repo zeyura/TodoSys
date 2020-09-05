@@ -15,8 +15,10 @@
 
                 <input type="text" ref="datepicker">
 
-                <button class="btn" type="submit" style="margin-right: 1rem">Update</button>
-                <button class="btn orange" type="button">Complete</button>
+                <div v-if="task.status !== 'completed'">
+                    <button class="btn" type="submit" style="margin-right: 1rem">Update</button>
+                    <button class="btn orange" type="button" @click="completeTask">Complete Task</button>
+                </div>
 
             </form>
         </div>
@@ -62,17 +64,21 @@
         },
         methods: {
             submitHandler() {
-
                 this.$store.dispatch('updateTask', {
                     id: this.task.id,
                     description: this.description,
                    // status: this.task.status,
                     tags: this.chips.chipsData,
                     date: this.date.date
-                })
-
+                });
+                this.$router.push('/list')
+            },
+            completeTask() {
+                //debugger
+                this.$store.dispatch('completeTask', this.task.id);
                 this.$router.push('/list')
             }
+
         },
         destroyed(){
             // удаляем объекты плагинов

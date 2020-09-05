@@ -3,9 +3,28 @@
 
         <h1>List</h1>
 
-        <hr>
+        <div class="row" v-if="tasks.length">
+            <div class="input-field col s12 m6 l4">
+                <select class="" v-model="filter" ref="selectFilter">
+                    <option value="all" selected>All tasks</option>
+                    <option value="active">Active</option>
+                    <option value="outdated">Outdated</option>
+                    <option value="completed">Completed</option>
+                </select>
+                <label>Status Filter</label>
+            </div>
+            <div class="input-field col s12 m6 l4">
+                <select class="" v-model="sorter" ref="selectSorter" :onchange="sortChange()">
+                    <option value="time">By Time</option>
+                    <option value="timeAgo">By Time Ago</option>
+                    <option value="ask">Ask</option>
+                    <option value="desk">Desk</option>
+                </select>
+                <label>Tasks sort </label>
+            </div>
+        </div>
 
-        <table v-if="tasks.length">
+        <table v-if="filteredTasks.length">
             <thead>
                 <tr>
                     <th>#</th>
@@ -18,7 +37,7 @@
             </thead>
             <tbody>
                 <tr
-                    v-for="(task,ind) in tasks"
+                    v-for="(task,ind) in filteredTasks"
                     :key="task.id"
                 >
                     <td>{{ind+1}}</td>
@@ -43,9 +62,31 @@
 <script>
     export default {
         name: "list",
+        data: () => ({
+           filter: 'all',
+           sorter: 'time'
+        }),
         computed: {
             tasks() {
                 return this.$store.getters.tasks;
+            },
+            filteredTasks() {
+                return this.tasks.filter( t => {
+                    if( this.filter === 'all' ) {
+                        return true;
+                    } else {
+                        return t.status === this.filter;
+                    }
+                })
+            }
+        },
+        mounted() {
+            this.selectFilter = M.FormSelect.init(this.$refs.selectFilter, {});
+            this.selectSorter = M.FormSelect.init(this.$refs.selectSorter, {});
+        },
+        methods: {
+            sortChange() {
+                localStorage.setItem('tasksSort', this.sorter);
             }
         }
     }
