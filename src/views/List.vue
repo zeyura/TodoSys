@@ -117,13 +117,23 @@
         max-width: 150px;
     }
     .td-description {
-        max-width: 600px;
+        max-width: 150px;
 
         div {
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
         }
+    }
+
+    @media only screen and (min-width: 601px) {
+        .td-description { max-width: 200px; }
+    }
+    @media only screen and (min-width: 768px) {
+        .td-description { max-width: 400px; }
+    }
+    @media only screen and (min-width: 993px) {
+        .td-description { max-width: 600px; }
     }
 
 </style>

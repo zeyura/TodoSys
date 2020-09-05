@@ -31,4 +31,16 @@
 }
 
 
+  @media only screen and (min-width: 768px) {
+    .container { width: 750px; }
+  }
+
+  @media only screen and (min-width: 993px) {
+    .container { width: 980px; }
+  }
+
+  @media only screen and (min-width: 1201px) {
+    .container { width: 1180px; }
+  }
+
 </style>
