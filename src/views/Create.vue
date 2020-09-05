@@ -57,14 +57,15 @@ export default {
    methods: {
         submitHandler() {
             const task = {
+                id: Date.now(),
                 title: this.title,
                 description: this.description,
-                id: Date.now(),
                 status: 'active',
                 tags: this.chips.chipsData,
                 date: this.date.date
             }
-            console.log(task)
+            this.$store.dispatch('createTask', task)
+            this.$router.push('/list')
         }
    },
    destroyed(){
